@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+<meta http-equiv="Pragma" content="no-cache">
+<!-- pragmaの設定 -->
+<meta http-equiv="Cache-Control" content="no-cache">
+<!-- キャッシュ制御 -->
+<title data-th-text="#{title} + #{title.case}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+
+<!-- Template CSS -->
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>案件管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">案件情報詳細</h2>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/case/save-update}" th:object="${mstCaseForm}" method="post">
+                  <input type="hidden" th:field="*{id}" th:value="${mstCaseForm.id}" />
+                  <!-- transactionTokenのhidden input -->
+
+                  <div class="card">
+                    <div class="card-body">
+
+                      <!-- 顧客名 -->
+                      <div class="form-group">
+                        <h6>
+                          顧客名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.customerName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{customerName}"
+                          th:value="${mstCaseForm.customerName}"> <input type="hidden"
+                          th:field="*{custId}" th:value="${mstCaseForm.custId}">
+                      </div>
+
+                      <!-- 物件名 -->
+                      <div class="form-group">
+                        <h6>
+                          物件名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.floorName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{floorName}"
+                          th:value="${mstCaseForm.floorName}"> <input type="hidden"
+                          th:field="*{floorId}" th:value="${mstCaseForm.floorId}"> <small
+                          id="" class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 種別 -->
+                      <div class="form-group">
+                        <h6>
+                          種別<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseKind}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseKind}"
+                          th:value="${mstCaseForm.caseKind}"> <small id=""
+                          class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 案件名 -->
+                      <div class="form-group">
+                        <h6>
+                          案件名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseName}"
+                          th:value="${mstCaseForm.caseName}"> <small id=""
+                          class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 訪問予定日時 -->
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>訪問予定日時</h6>
+                        <h5>
+                          <div>[[${#temporals.format(mstCaseForm.caseVisitPlanDate,
+                            'yyyy-MM-dd HH:mm')}]]</div>
+                        </h5>
+                        <input type="hidden" th:field="*{caseVisitPlanDate}"
+                          th:value="${mstCaseForm.caseVisitPlanDate}">
+                      </div>
+
+                      <!-- 訪問担当者 -->
+                      <div class="form-group p-1">
+                        <h6>訪問担当者</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.visitManager}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{visitManager}"
+                          th:value="${mstCaseForm.visitManager}"> <input type="hidden"
+                          th:field="*{ownId}" th:value="${mstCaseForm.ownId}">
+                      </div>
+
+                      <!-- 敷金 -->
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>敷金</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseDeposit}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseDeposit}"
+                          th:value="${mstCaseForm.caseDeposit}">
+                      </div>
+
+                      <!-- 賃貸契約日 -->
+                      <div class="form-group p-1">
+                        <h6>賃貸契約日</h6>
+                        <h5>
+                          <div>[[${#temporals.format(mstCaseForm.caseContractDate,
+                            'yyyy-MM-dd HH:mm')}]]</div>
+                        </h5>
+                        <input type="hidden" th:field="*{caseContractDate}"
+                          th:value="${mstCaseForm.caseContractDate}">
+                      </div>
+
+                      <!-- 賃貸契約終了日 -->
+                      <div class="form-group p-1">
+                        <h6>賃貸契約終了日</h6>
+                        <h5>
+                          <div>[[${#temporals.format(mstCaseForm.caseContractEndDate,
+                            'yyyy-MM-dd HH:mm')}]]</div>
+                        </h5>
+                        <input type="hidden" th:field="*{caseContractEndDate}"
+                          th:value="${mstCaseForm.caseContractEndDate}">
+                      </div>
+
+                      <!-- 入居者性 -->
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>入居者性</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantLName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantLName}"
+                          th:value="${mstCaseForm.caseTenantLName}">
+                      </div>
+
+                      <!-- 入居者名 -->
+                      <div class="form-group p-1">
+                        <h6>入居者名</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantFName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantFName}"
+                          th:value="${mstCaseForm.caseTenantFName}">
+                      </div>
+
+                      <!-- 入居者性カナ -->
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>入居者姓カナ</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantLNameKana}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantLNameKana}"
+                          th:value="${mstCaseForm.caseTenantLNameKana}">
+                      </div>
+                      <!-- 入居者名カナ -->
+                      <div class="form-group p-1">
+                        <h6>入居者名カナ</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantFNameKana}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantFNameKana}"
+                          th:value="${mstCaseForm.caseTenantFNameKana}">
+                      </div>
+
+                      <!-- 入居者電話番号 -->
+                      <div class="form-group">
+                        <h6>電話番号</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantTel}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantTel}"
+                          th:value="${mstCaseForm.caseTenantTel}">
+                      </div>
+
+                      <!-- 転居先郵便番号 -->
+                      <div class="form-group">
+                        <h6>郵便番号</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantZip}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantZip}"
+                          th:value="${mstCaseForm.caseTenantZip}"> <small id=""
+                          class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 転居先都道府県 -->
+                      <div class="form-group">
+                        <h6>転居先都道府県</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantPrefecture}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantPrefecture}"
+                          th:value="${mstCaseForm.caseTenantPrefecture}">
+                      </div>
+
+                      <!-- 転居先住所 -->
+                      <div class="form-group">
+                        <h6>転居先住所</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantAddress}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantAddress}"
+                          th:value="${mstCaseForm.caseTenantAddress}"> <small id=""
+                          class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 転居先建物名 -->
+                      <div class="form-group">
+                        <h6>転居先建物名</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantBuilding}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantBuilding}"
+                          th:value="${mstCaseForm.caseTenantBuilding}"> <small id=""
+                          class="form-text text-muted"></small>
+                      </div>
+
+                      <!-- 入居者銀行名 -->
+                      <div class="form-group">
+                        <h6>入居者銀行</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantBankName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantBankName}"
+                          th:value="${mstCaseForm.caseTenantBankName}">
+                      </div>
+
+                      <!-- 入居者銀行支部名 -->
+                      <div class="form-group">
+                        <h6>入居者銀行支店名</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantBranchName}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantBranchName}"
+                          th:value="${mstCaseForm.caseTenantBranchName}">
+                      </div>
+
+                      <!-- 入居者口座番号 -->
+                      <div class="form-group">
+                        <h6>入居者口座番号</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantBankNo}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantBankNo}"
+                          th:value="${mstCaseForm.caseTenantBankNo}">
+                      </div>
+
+                      <!-- 入居者口座名義 -->
+                      <div class="form-group">
+                        <h6>入居者口座名義</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantMeigi}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantMeigi}"
+                          th:value="${mstCaseForm.caseTenantMeigi}">
+                      </div>
+
+                      <!-- 入居者口座名義カナ -->
+                      <div class="form-group">
+                        <h6>入居者口座名義カナ</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseTenantMeigiKana}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseTenantMeigiKana}"
+                          th:value="${mstCaseForm.caseTenantMeigiKana}">
+                      </div>
+
+                      <!-- シリンダー番号 -->
+                      <div class="form-group">
+                        <h6>シリンダー番号</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseCylinderNo}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseCylinderNo}"
+                          th:value="${mstCaseForm.caseCylinderNo}">
+                      </div>
+
+                      <!-- 備考 -->
+                      <div class="form-group">
+                        <h6>備考</h6>
+                        <h5>
+                          <span th:text="${mstCaseForm.caseBikou}"></span>
+                        </h5>
+                        <input type="hidden" th:field="*{caseBikou}"
+                          th:value="${mstCaseForm.caseBikou}">
+                      </div>
+
+
+
+                      <input type="hidden" th:field="*{transactionToken}"
+                        th:value="${mstCaseForm.transactionToken}">
+
+
+                      <div class="section-body">
+                        <div class="buttons">
+                          <!-- 前の画面へ戻るボタン -->
+                          <a href="javascript:history.back();" class="btn btn-light btn-lg">前の画面へ戻る</a>
+                          <!-- 確認ボタン -->
+                          <button type="submit" class="btn btn-success btn-lg">変更</button>
+                        </div>
+                      </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div class="footer-left">Copyright &copy; se-project 2024</div>
+        <div class="footer-right">2.3.0</div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+
+</body>
+</html>

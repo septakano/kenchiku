@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="jp">
+<head>
+<meta charset="UTF-8" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+  name="viewport" />
+<title data-th-text="#{title} + #{title.case}"></title>
+
+<!-- General CSS Files -->
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous" />
+
+<!-- CSS Libraries -->
+
+<!-- Template CSS -->
+<link rel="stylesheet" href="../../assets/css/style.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <div class="insert" th:insert="~{common/main-navbar :: main-navbar}"></div>
+      <div class="insert" th:insert="~{common/sidebar :: sidebar}"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>案件管理</h1>
+          </div>
+
+          <div class="section-body">
+            <h2 class="section-title mb-5">案件新規登録</h2>
+            <p class="section-lead">
+              <!-- We use 'DataTables' made by @SpryMedia. You can check the full documentation <a href="https://datatables.net/">here</a>. -->
+            </p>
+
+            <div class="row">
+              <div class="col-12 col-lg-8">
+                <form th:action="@{/case/register}" th:object="${mstCase}" method="post" novalidate>
+                  <input type="hidden" name="transactionToken" th:value="${transactionToken}">
+
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <h6>
+                          顧客名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <select class="form-control w-50" th:field="*{custId}">
+                          <th:block th:each="cus : ${customer}">
+                            <option th:value="${cus.id}"><span th:text="${cus.corpName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+                      <script type="text/javascript">
+							function openWindow(url,name) {
+ 								 window.open(url, name, 'width=800,height=600');
+							}
+						</script>
+                      <div class="form-group">
+                        <h6>
+                          物件名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control w-75 float-left"
+                          th:field="*{floorName}" th:classappend="${#fields.hasErrors('floorName')} ? 'is-invalid'" id="aaaa" /> 
+                        <input type="hidden" th:field="*{floorId}" id="floorid">
+                          <a href="javascript:openWindow" onclick="openWindow('select','child_window1')"
+                          class="btn btn-primary mt-1 ml-1">物件検索<span
+                          class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a> 
+                          <small class="invalid-feedback" th:if="${#fields.hasErrors('floorName')}" th:errors="*{floorName}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>
+                          種別<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <select class="form-control w-50" th:field="*{caseKind}">
+                          <th:block th:each="case : ${caseKind}">
+                            <option th:value="${case.codeName}"><span
+                                th:text="${case.codeName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          案件名<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{caseName}" th:classappend="${#fields.hasErrors('caseName')} ? 'is-invalid'" />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('caseName')}" th:errors="*{caseName}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>訪問予定日時</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{caseVisitPlanDate}" /> <small id=""
+                          class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>訪問担当者</h6>
+                        <select class="form-control w-50" th:field="*{ownId}">
+                          <th:block th:each="own : ${owner}">
+                            <option th:value="${own.id}"><span
+                                th:text="${own.lName} + ${own.fName}"></span></option>
+                          </th:block>
+                        </select> <small id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>敷金</h6>
+                        <input type="text" class="form-control" th:field="*{caseDeposit}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>賃貸契約日</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{caseContractDate}" /> <small id=""
+                          class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>賃貸契約終了日</h6>
+                        <input type="datetime-local" class="form-control"
+                          th:field="*{caseContractEndDate}" /> <small id=""
+                          class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          入居者姓<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantLName}"　th:classappend="${#fields.hasErrors('caseTenantLName')} ? 'is-invalid'"  />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('caseTenantLName')}" th:errors="*{caseTenantLName}"></small>
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者名<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{caseTenantFName}"　th:classappend="${#fields.hasErrors('caseTenantFName')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('caseTenantFName')}" th:errors="*{caseTenantFName}"></small>
+                      </div>
+                      <div class="form-group w-50 float-left p-1">
+                        <h6>
+                          入居者姓カナ<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantLNameKana}"　th:classappend="${#fields.hasErrors('caseTenantLNameKana')} ? 'is-invalid'"  />
+                         <small class="invalid-feedback" th:if="${#fields.hasErrors('caseTenantLNameKana')}" th:errors="*{caseTenantLNameKana}"></small>
+                      </div>
+                      <div class="form-group p-1">
+                        <h6>
+                          入居者名カナ<span class="badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <input type="text" class="form-control w-50" th:field="*{caseTenantFNameKana}"　th:classappend="${#fields.hasErrors('caseTenantFNameKana')} ? 'is-invalid'"  />
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('caseTenantFNameKana')}" th:errors="*{caseTenantFNameKana}"></small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者電話番号</h6>
+                        <input type="text" class="form-control"  th:field="*{caseTenantTel}" th:classappend="${#fields.hasErrors('caseTenantTel')} ? 'is-invalid'" /> 
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('caseTenantTel')}" th:errors="*{caseTenantTel}">0000-00-1111のような書式で入力してください</small>                      
+                        </div>
+
+                      <div class="form-group">
+                        <h6>転居先郵便番号</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantZip}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>
+                          転居先都道府県<span class="badge badge badge-danger ml-1 mt-0">必須</span>
+                        </h6>
+                        <select class="form-control w-50" th:field="*{caseTenantPrefecture}">
+                          <th:block th:each="pref : ${prefectures}">
+                            <option th:value="${pref.codeName}"><span
+                                th:text="${pref.codeName}"></span></option>
+                          </th:block>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>転居先住所</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantAddress}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>転居先建物名</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantBuilding}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+
+                      <div class="form-group">
+                        <h6>入居者銀行名</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantBankName}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者銀行支店名</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantBranchName}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者口座番号</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantBankNo}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者口座名義</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantMeigi}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>入居者口座名義カナ</h6>
+                        <input type="text" class="form-control" th:field="*{caseTenantMeigiKana}" />
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>シリンダー番号</h6>
+                        <input type="text" class="form-control" th:field="*{caseCylinderNo}" /> <small
+                          id="" class="form-text text-muted"> </small>
+                      </div>
+                      <div class="form-group">
+                        <h6>備考</h6>
+                        <textarea class="form-control" style="height: 100px" th:field="*{caseBikou}"></textarea>
+                        <small id="" class="form-text text-muted"> </small>
+                      </div>
+                      
+                    
+                      
+                      
+                      
+                    </div>
+                  </div>
+
+                  <div class="section-body">
+                    <div class="buttons">
+                      <a href="/case" class="btn btn-light btn-lg">閉じる</a>
+                      <button type="submit" class="btn btn-success btn-lg">確認</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">Copyright &copy; se-project 2024</div>
+        <div class="footer-right">2.3.0</div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="../../assets/js/stisla.js"></script>
+
+  <!-- JS Libraies -->
+
+  <!-- Template JS File -->
+  <script src="../../assets/js/scripts.js"></script>
+  <script src="../../assets/js/custom.js"></script>
+
+  <!-- Page Specific JS File -->
+
+
+</body>
+</html>
